@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helppyapp/models/feel.dart';
 
-import '../main.dart';
-
 class FeelDetails extends StatefulWidget {
 
   final Feel feel;

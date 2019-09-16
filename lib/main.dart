@@ -54,6 +54,9 @@ class MainApp extends StatelessWidget {
     builder.add(Screen(_infoMap[2].title, Icons.help, FeelsScreen(_infoMap[2], _feelsMap)));
     builder.add(Screen("Exercício", Icons.directions_run, BreathScreen(_infoMap[3])));
     builder.add(Screen("Motivação", Icons.library_books, BlogScreen(user)));
+
+    //builder.add(Screen("Teste", Icons.query_builder, TestScreen()));
+
     return builder.build();
   }
 }
