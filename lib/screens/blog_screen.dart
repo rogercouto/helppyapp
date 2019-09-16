@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -10,11 +9,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
 import 'package:helppyapp/models/post.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:share/share.dart' as ss;
-import 'package:storage_path/storage_path.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:ui' as ui;
 
 const API_KEY = "AIzaSyAQ-5abONK2YaBj9mAANdvzvojO86T5Cq0";
@@ -69,11 +68,13 @@ class _BlogScreenState extends State<BlogScreen> {
       .startAfter([_lastDoc.data["id"]])
       .limit(PAGE_SIZE);
     QuerySnapshot querySnapshot = await q.getDocuments();
+    print(querySnapshot.documents.length);
     if(querySnapshot.documents.length < PAGE_SIZE){
       _morePostsAvaliable = false;
+    }else{
+      _lastDoc = querySnapshot.documents[querySnapshot.documents.length - 1];
+      _posts.addAll(querySnapshot.documents);
     }
-    _lastDoc = querySnapshot.documents[querySnapshot.documents.length -1];
-    _posts.addAll(querySnapshot.documents);
     setState(() {});
     _gettinMorePosts = false;
   }
@@ -86,7 +87,7 @@ class _BlogScreenState extends State<BlogScreen> {
     return bData.buffer.asUint8List();
   }
 
-  
+  /*
   Future<File> _downloadFile(String url, String filename) async {
 
     String path = "/storage/emulated/0/DCIM/Camera/";
@@ -102,6 +103,7 @@ class _BlogScreenState extends State<BlogScreen> {
     await file.writeAsBytes(bytes);
     return file;
   }
+  */
   
 
   String _getMediaExtension(Post post){
@@ -146,28 +148,27 @@ class _BlogScreenState extends State<BlogScreen> {
     }
   }
 
-  _savePost(Post post) async{
+  _savePost(BuildContext context, Post post) async{
+    Uint8List image;
     if (post.mediaType == "image"){
-      String ext = _getMediaExtension(post);
-      String type = _getMediaType(ext);
-      File file = await _downloadFile(post.media, "helppy.$ext");
-      print(file.path);
-      /*
-      print(file.path);
-      var imagePath = await StoragePath.imagesPath;
-      List<dynamic> j = json.decode(imagePath);
-      j.forEach((item){
-        //var t = item["folderName"];
-        //print("?: $t");
-        List<dynamic> files = item["files"];
-        files.forEach((file){
-          print(file);
-        });
-      });
-      */
-      String path = "/storage/emulated/0/DCIM/Camera/";
-    }else{
-
+      PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+      if (permission == PermissionStatus.denied){
+        await PermissionHandler().openAppSettings();
+      }
+      var request = await HttpClient().getUrl(Uri.parse(post.media));
+      var response = await request.close();
+      image = await consolidateHttpClientResponseBytes(response);
+      
+    }else if (post.mediaType == null){
+      image = await _createImage(post);
+    }
+    if (image != null){
+      final result = await ImageGallerySaver.saveImage(image);
+      if (result != null){
+        Scaffold.of(context).showSnackBar(SnackBar(content: Text("Imagem salva na galeria!"),));
+      }else{
+        Scaffold.of(context).showSnackBar(SnackBar(content: Text("Imagem não pode ser salva na galeria!"),));
+      }
     }
   }
 
@@ -302,7 +303,7 @@ class _BlogScreenState extends State<BlogScreen> {
                               backgroundColor: Theme.of(context).secondaryHeaderColor,
                               child: Icon(Icons.save, color: Colors.white,), 
                               onPressed: () async{
-                                await _savePost(post);
+                                await _savePost(context, post);
                               },
                             ),
                           ),
