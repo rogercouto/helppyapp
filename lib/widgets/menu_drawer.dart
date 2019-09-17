@@ -8,8 +8,9 @@ class MenuDrawer extends StatelessWidget {
 
   final PageController pageController;
   final List<Screen> screens;
+  final ThemeData themeData;
 
-  MenuDrawer(this.pageController, this.screens);
+  MenuDrawer(this.pageController, this.screens, this.themeData);
 
   Widget menuItem(String title, IconData iconData, BuildContext context, int pageIndex){
     
@@ -22,10 +23,10 @@ class MenuDrawer extends StatelessWidget {
         height: 40,
         child: Row(
           children: <Widget>[
-            Icon(iconData, color: (same)? Colors.grey : CBROWN,),
+            Icon(iconData, color: (same)? Colors.grey : themeData.primaryColor,),
             SizedBox(width: 15,),
             Text(title, style: TextStyle(fontSize: 18,
-              color: (same)? Colors.grey : CBROWN
+              color: (same)? Colors.grey : themeData.primaryColor
             ),)
           ],
         ),
@@ -34,6 +35,11 @@ class MenuDrawer extends StatelessWidget {
         Navigator.of(context).pop();
         pageController.jumpToPage(pageIndex);
         bloc.changeTitle(title);
+        if (screens[pageIndex].action != null){
+          bloc.changeAction(screens[pageIndex].action);
+        }else{
+          bloc.changeAction(Container());
+        }
       },
     );
   }

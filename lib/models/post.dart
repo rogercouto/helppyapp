@@ -51,4 +51,12 @@ class Post{
     return DateFormat("dd/MM/yyyy HH:mm").format(createdAt);
   }
 
+  static List<Post> fromDocuments(List<DocumentSnapshot> documents){
+    List<Post> list = [];
+    documents.forEach((doc){
+      list.add(Post.fromDocument(doc));
+    });
+    return list;
+  }
+
 }

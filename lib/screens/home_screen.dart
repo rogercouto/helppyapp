@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:helppyapp/main.dart';
 import 'package:helppyapp/blocs/animation_bloc.dart';
 import 'package:helppyapp/blocs/bar_bloc.dart';
 
@@ -122,7 +123,9 @@ class _HomeState extends State<HomeScreen> {
               shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
               onPressed: () {
                 bloc.changeTitle("Objetivo");
+                bloc.changeAction(MainApp.backToHome(widget._pageController));
                 widget._pageController.jumpToPage(1);
+
               },
             ),
           ),
@@ -134,6 +137,7 @@ class _HomeState extends State<HomeScreen> {
               onPressed: () {
                 bloc.changeTitle("Ajuda");
                 widget._pageController.jumpToPage(2);
+                bloc.changeAction(MainApp.backToHome(widget._pageController));
               },
             ),
           ),
