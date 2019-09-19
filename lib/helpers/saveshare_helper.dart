@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
   
-class SaveShare {
+class SaveShareHelper {
 
   static String _getFileExtension(String url){
     var s = url.split(".");

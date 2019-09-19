@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helppyapp/helpers/screen_helper.dart';
 import 'package:helppyapp/models/feel.dart';
 
 class FeelDetails extends StatefulWidget {
@@ -16,16 +17,18 @@ class _FeelDetailsState extends State<FeelDetails> {
   final int descrLength;
   
   final _controller = ScrollController();
+
+  ScreenHelper _screenHelper;
   
   GlobalKey _scrollKey = GlobalKey();
 
-  bool _canScrollUp;
+  bool _canScrollUp = false;
   bool _canScrollDown;
 
   _FeelDetailsState(this.descrLength);
 
   bool _needScroll(){
-    return descrLength > 850;
+    return descrLength > _screenHelper.dimensions.height;
   }
 
   double _getTextHeight(){
@@ -47,7 +50,7 @@ class _FeelDetailsState extends State<FeelDetails> {
       padding: EdgeInsets.fromLTRB(30, 50, _needScroll()? 70 : 30, 50),
       child: Column(
         children: <Widget>[
-          Text(widget.feel.subtitle, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold), textAlign: TextAlign.justify),
+          Text(widget.feel.subtitle, style: TextStyle(fontSize: _screenHelper.size == ScreenSize.SMALL ? 20 : 24, fontWeight: FontWeight.bold), textAlign: TextAlign.left),
           SizedBox(height: 20,),
           Text(widget.feel.descr, style: TextStyle(fontSize: 18), textAlign: TextAlign.justify)
         ],
@@ -101,6 +104,7 @@ class _FeelDetailsState extends State<FeelDetails> {
 
   @override
   Widget build(BuildContext context) {
+    _screenHelper = ScreenHelper(context);
     if (_canScrollUp == null)
       _canScrollUp = true;
     if (_canScrollDown == null)

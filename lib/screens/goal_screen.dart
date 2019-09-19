@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:helppyapp/helpers/screen_helper.dart';
+import 'package:helppyapp/widgets/screen.dart';
 
 class GoalScreen extends StatelessWidget {
 
@@ -8,18 +10,15 @@ class GoalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //Tentativa de corrigir tamanho
-    double screenWidth = MediaQuery.of(context).size.width;
-    double iconWidth = screenWidth * 0.5;
-    double fontSize = screenWidth * 0.05;
+    ScreenHelper screenHelper = ScreenHelper(context);
     return Column(
       children: <Widget>[
         SizedBox(height: 30,),
-        Image.asset("assets/image/helppy.png", width: iconWidth,),
+        Image.asset("assets/image/helppy.png", width: screenHelper.getGoalIconSize(),),
         Container(
-          margin: EdgeInsets.all(40),
+          margin: EdgeInsets.all(30),
           child: Text("$objetivo", textAlign: TextAlign.justify, style: TextStyle(
-            fontSize: fontSize,
+            fontSize: screenHelper.getGoalFontSize(),
           ),),
         ),
       ],

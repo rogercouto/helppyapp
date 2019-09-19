@@ -19,29 +19,29 @@ class PostCard extends StatelessWidget {
   Future<void> _sharePost() async{
     switch (post.mediaType) {
       case "image":
-        SaveShare.shareImageFromUrl(post.media);
+        SaveShareHelper.shareImageFromUrl(post.media);
         break;
       case "video":
-        SaveShare.shareVideo(post.media);
+        SaveShareHelper.shareVideo(post.media);
         break;
       case "link":
-        SaveShare.shareLink(post.media);
+        SaveShareHelper.shareLink(post.media);
         break;    
       default:
-        Uint8List bytes = await SaveShare.createImageBytes(globalKey);
-        SaveShare.shareImageFromBytes(bytes);
+        Uint8List bytes = await SaveShareHelper.createImageBytes(globalKey);
+        SaveShareHelper.shareImageFromBytes(bytes);
     }
   }
 
   Future<String> _savePost() async{
     Uint8List bytes;
     if (post.mediaType == "image"){
-      bytes = await SaveShare.getImageBytes(post.media);
+      bytes = await SaveShareHelper.getImageBytes(post.media);
     }else{
-      bytes = await SaveShare.createImageBytes(globalKey);
+      bytes = await SaveShareHelper.createImageBytes(globalKey);
     }
     if (bytes != null){
-      bool saved = await SaveShare.saveImageBytes(bytes);
+      bool saved = await SaveShareHelper.saveImageBytes(bytes);
       if (saved)
         return "Imagem salva na galeria!";
     }
@@ -179,7 +179,7 @@ class PostCard extends StatelessWidget {
                               backgroundColor: Theme.of(context).secondaryHeaderColor,
                               child: Icon(Icons.save, color: Colors.white,), 
                               onPressed: () async{
-                                bool canSave = await SaveShare.askStoragePermission(context);
+                                bool canSave = await SaveShareHelper.askStoragePermission(context);
                                 if (canSave){
                                   String result = await _savePost();
                                   Scaffold.of(context).showSnackBar(SnackBar(content: Text(result),));  
