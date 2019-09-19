@@ -1,5 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:helppyapp/blocs/animation_bloc.dart';
 import 'package:helppyapp/blocs/bar_bloc.dart';
 import 'package:helppyapp/blocs/posts_bloc.dart';
@@ -57,6 +58,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Prevents landscape orientation mode
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+    ]);
 
     ScreenBuilder builder = ScreenBuilder(Theme.of(context));
     
