@@ -1,25 +1,22 @@
-import 'dart:math';
-
 import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:helppyapp/helpers/screen_helper.dart';
-import 'package:helppyapp/main.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:helppyapp/blocs/animation_bloc.dart';
-import 'package:helppyapp/blocs/bar_bloc.dart';
+import 'package:helppyapp/blocs/app_bloc.dart';
+import 'package:helppyapp/helpers/screen_helper.dart';
 
 class HomeScreen extends StatefulWidget {
 
-  final PageController _pageController;
+  final PageController pageController;
 
-  HomeScreen(this._pageController);
+  HomeScreen(this.pageController);
 
   @override
-  _HomeState createState() => _HomeState();
+  _HomeScreenState createState() => _HomeScreenState();
 
 }
 
-class _HomeState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> {
 
   bool _bVisible = false;
 
@@ -116,14 +113,13 @@ class _HomeState extends State<HomeScreen> {
   }
 
   Widget botoes(){
-    var bloc = BlocProvider.getBloc<BarBloc>();
+    var bloc = BlocProvider.getBloc<AppBloc>();
     Position pos = _screenHelper.getHomeBtnsPos();
     return Positioned(
       top: pos.y,
       left: pos.x,
       child: Column(
         children: <Widget>[
-          
           ConstrainedBox(constraints: BoxConstraints(minWidth: 175),
             child: RaisedButton(
               color: Colors.brown,
@@ -131,9 +127,7 @@ class _HomeState extends State<HomeScreen> {
               shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
               onPressed: () {
                 bloc.changeTitle("Objetivo");
-                bloc.changeAction(MainApp.backToHome(widget._pageController));
-                widget._pageController.jumpToPage(1);
-
+                widget.pageController.jumpToPage(1);
               },
             ),
           ),
@@ -144,8 +138,7 @@ class _HomeState extends State<HomeScreen> {
               shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
               onPressed: () {
                 bloc.changeTitle("Ajuda");
-                widget._pageController.jumpToPage(2);
-                bloc.changeAction(MainApp.backToHome(widget._pageController));
+                widget.pageController.jumpToPage(2);
               },
             ),
           ),
@@ -188,7 +181,7 @@ class _HomeState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     _screenHelper = ScreenHelper(context);
-    print(_screenHelper.size);
+    //print(_screenHelper.size);
     return Stack(
         children: <Widget>[
           fadeInB(),

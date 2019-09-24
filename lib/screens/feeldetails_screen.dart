@@ -61,14 +61,14 @@ class _FeelDetailsState extends State<FeelDetails> {
 
 
   void _scrollUp(){
-    print("Scroll up ($_canScrollUp) h: ${_getTextHeight()}");
+    //print("Scroll up ($_canScrollUp) h: ${_getTextHeight()}");
     setState(() {
       _controller.jumpTo(0.0);
     });
   }
 
   void _scrollDown(){
-    print("Scroll down ($_canScrollDown) h: ${_getTextHeight()}");
+    //print("Scroll down ($_canScrollDown) h: ${_getTextHeight()}");
     setState(() {
       _controller.jumpTo(_getTextHeight()+60);
     });

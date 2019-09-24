@@ -4,15 +4,19 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-class BarBloc implements BlocBase{
+class AppBloc implements BlocBase{
 
   final _titleController = BehaviorSubject<String>();
 
   final _actionsController = BehaviorSubject<Widget>();
 
+  final _indexController = BehaviorSubject<int>(); 
+
   Stream get outTitle => _titleController.stream;
 
   Stream get outAction => _actionsController.stream;
+
+  Stream get outIndex => _indexController.stream;
 
   void changeTitle(String newTitle){
     if (newTitle != null){
@@ -26,6 +30,10 @@ class BarBloc implements BlocBase{
     _actionsController.sink.add(action);
   }
 
+  void changePageIndex(int pageIndex){
+    _indexController.sink.add(pageIndex);
+  }
+
   @override
   void addListener(listener) {
     // TODO: implement addListener
@@ -35,6 +43,7 @@ class BarBloc implements BlocBase{
   void dispose() {
     _titleController.close();
     _actionsController.close();
+    _indexController.close();
   }
 
   @override

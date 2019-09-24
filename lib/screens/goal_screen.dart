@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:helppyapp/helpers/screen_helper.dart';
-import 'package:helppyapp/widgets/screen.dart';
 
 class GoalScreen extends StatelessWidget {
 

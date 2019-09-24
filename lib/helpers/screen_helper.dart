@@ -19,7 +19,7 @@ class ScreenHelper{
   ScreenSize _size;
 
   ScreenHelper(BuildContext context){
-    print(MediaQuery.of(context).size);
+    //print(MediaQuery.of(context).size);
     _dim = Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height);
     if (_dim.height <= 590){
       _size = ScreenSize.SMALL;
@@ -38,13 +38,13 @@ class ScreenHelper{
 
   Size getHomeGirafaSize() {
     if (_size == ScreenSize.SMALL)
-      return Size(220, 220);
+      return Size(200, 200);
     else if (_size == ScreenSize.MEDIUM)
-      return Size(275, 275);
+      return Size(250, 250);
     else if (_size == ScreenSize.BIG)
-      return Size(325, 325);
+      return Size(300, 300);
     else
-      return Size(350, 350);
+      return Size(325, 325);
   }
 
   Size getHomeBalaoSize(){

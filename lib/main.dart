@@ -1,8 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:helppyapp/blocs/animation_bloc.dart';
-import 'package:helppyapp/blocs/bar_bloc.dart';
+import 'package:helppyapp/blocs/app_bloc.dart';
 import 'package:helppyapp/blocs/posts_bloc.dart';
 import 'package:helppyapp/models/feel.dart';
 import 'package:helppyapp/models/info.dart';
@@ -13,86 +12,177 @@ import 'package:helppyapp/screens/goal_screen.dart';
 import 'package:helppyapp/screens/feels_screen.dart';
 import 'package:helppyapp/screens/motivation_screen.dart';
 import 'package:helppyapp/screens/splash_screen.dart';
+import 'package:helppyapp/widgets/bottom_bar.dart';
 import 'package:helppyapp/widgets/screen.dart';
-import 'package:helppyapp/widgets/screen_builder.dart';
+import 'package:stack/stack.dart' as data;
+import 'helpers/content_helper.dart';
 
-//const CYELLOW = Color.fromARGB(255, 255, 214, 0);
-//const CBROWN = Color.fromARGB(255, 56, 33, 13);
+void main() {
 
-void main() => runApp(
+  return runApp(
+    BlocProvider(
+      blocs: [
+          Bloc((i) => AnimationBloc()),
+          Bloc((i) => AppBloc()),
+          Bloc((i) => PostsBloc())
+        ],
+        child: MaterialApp(
+          home: Loader(),
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.brown,
+            primaryColor: Color.fromARGB(255, 56, 33, 13),
+            secondaryHeaderColor: Color.fromARGB(255, 255, 214, 0)
+          ),
+        )
+    )
+  );
+}
 
-  BlocProvider(
-    blocs: [
-        Bloc((i) => BarBloc()),
-        Bloc((i) => AnimationBloc()),
-        Bloc((i) => PostsBloc())
-      ],
-      child: MaterialApp(
-        home: Splash(),
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.brown,
-          primaryColor: Color.fromARGB(255, 56, 33, 13),
-          secondaryHeaderColor: Color.fromARGB(255, 255, 214, 0)
-        ),
-      )
-  )
-);
+class Loader extends StatelessWidget {
 
-class MainApp extends StatelessWidget {
-    
-  final Map<int, Info> _infoMap;  //info collection
-  final Map<int, Feel> _feelsMap;
-  final String user;
+  @override
+  Widget build(BuildContext context) {
 
-  MainApp(this._infoMap, this._feelsMap, this.user);
-
-  static Widget backToHome(PageController pageController){
-    var barBloc = BlocProvider.getBloc<BarBloc>();
-    return IconButton(icon: Icon(Icons.home), onPressed: (){
-      pageController.jumpToPage(0);
-      barBloc.changeTitle("Home");
-      barBloc.changeAction(Container());
+    Map<int, Info> _infos;
+    Map<int, Feel> _feels;
+    ContentHelper.getInfoMap().then((infoMap){
+      _infos = infoMap;
+      ContentHelper.getFeelsMap().then((feelsMap){
+        _feels = feelsMap;
+      });
+      Future.delayed(Duration(seconds: 2)).then((_){
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) {
+            return MainApp(_infos, _feels);
+          })
+        );
+      });
     });
+    return SplashScreen();
+  }
+
+}
+
+class MainApp extends StatefulWidget {
+  
+  final Map<int, Info> infos;
+  final Map<int, Feel> feels;
+  
+  MainApp(this.infos, this.feels);
+  
+  @override
+  _MainAppState createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+
+  final pageController = PageController();
+
+  final bloc = BlocProvider.getBloc<AppBloc>();
+
+  var _stack = data.Stack<int>();
+
+  List<Screen> getScreens(){
+    var postsBloc = BlocProvider.getBloc<PostsBloc>();
+    return[
+      Screen(0,"Home", Icons.home, HomeScreen(pageController)),
+      Screen(1, "Objetivo", Icons.check, GoalScreen(widget.infos[1].text)),
+      Screen(2, "Ajuda", Icons.phone, HelpScreen()),
+      Screen(3, widget.infos[2].title, Icons.help, FeelsScreen(widget.infos[2], widget.feels)),
+      Screen(4, "Exercício", Icons.directions_run, BreathScreen(widget.infos[3])),
+      Screen(5, "Motivação", Icons.library_books, MotivationScreen(),
+      action: IconButton(icon: Icon(Icons.refresh), onPressed: (){
+        postsBloc.getPosts();
+      },))
+    ];
+  }
+
+  Future<bool> _question(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Fechar o app?'),
+        //content: new Text('Tem certeza que deseja fechar o app?'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('Não'),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Sim'),
+          ),
+        ],
+      ),
+    ) ?? false;
   }
 
   @override
   Widget build(BuildContext context) {
-    //Prevents landscape orientation mode
-    //SystemChrome.setPreferredOrientations([
-    //  DeviceOrientation.portraitUp,
-    //  DeviceOrientation.portraitDown
-    //]);
-
-    ScreenBuilder builder = ScreenBuilder(Theme.of(context));
-    
-    builder.add(Screen("Home", Icons.home, HomeScreen(builder.pageController)));
-
-    builder.add(Screen("Objetivo", Icons.check, GoalScreen(_infoMap[1].text), 
-      action: backToHome(builder.pageController)));
-
-    builder.add(Screen("Ajuda", Icons.phone, HelpScreen(),
-      action: backToHome(builder.pageController)));
-
-    builder.add(Screen(_infoMap[2].title, Icons.help, FeelsScreen(_infoMap[2], _feelsMap)));
-
-    builder.add(Screen("Exercício", Icons.directions_run, BreathScreen(_infoMap[3])));
-    
-    var postsBloc = BlocProvider.getBloc<PostsBloc>();
-    builder.add(Screen("Motivação", Icons.library_books, MotivationScreen(), 
-      action: IconButton(icon: Icon(Icons.refresh), onPressed: (){
-        postsBloc.getPosts();
-      },)));
-    
-    builder.add(Screen("Sobre", Icons.help, 
-      Container(child: Padding(
-        padding: EdgeInsets.all(50),
-        child: Text("Em construção..."),
-      )),
-      action: backToHome(builder.pageController)
+    _stack.push(0);
+    List<Screen> screens = getScreens();
+    ThemeData themeData = Theme.of(context);
+    return WillPopScope(
+      onWillPop: (){
+        if (_stack.top() == pageController.page.round()){
+          _stack.pop();//discard actual one
+        }
+        if (_stack.isNotEmpty){
+          int old = _stack.pop();
+          pageController.jumpToPage(old);
+          return Future.value(false);
+        }else{
+          return _question(context);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: themeData.secondaryHeaderColor,
+          centerTitle: true,
+          title: StreamBuilder(
+            stream: bloc.outTitle,
+            initialData: "Home",
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              return Text("${snapshot.data}", style: TextStyle(color: themeData.primaryColor),);
+            },
+          ),
+          iconTheme: IconThemeData(color: themeData.primaryColor),
+          actions: <Widget>[
+            StreamBuilder(
+              stream: bloc.outAction,
+              initialData: Container(),
+              builder: (context, snapshot){
+                return snapshot.data != null ? snapshot.data : Container();
+              },
+            )
+          ],
+        ),
+        body: PageView(
+          //physics: NeverScrollableScrollPhysics(),
+          children: screens.map((screen)=>screen.child).toList(),
+          controller: pageController,
+          onPageChanged: (index){
+            _stack.push(index);
+            bloc.changeTitle(screens[index].screenTitle);
+            bloc.changePageIndex(index);
+            if (screens[index].action != null){
+              bloc.changeAction(screens[index].action);
+            }else{
+              bloc.changeAction(Container());
+            }
+          },
+        ),
+        bottomNavigationBar: StreamBuilder(
+          initialData: 0,
+          stream: bloc.outIndex,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return BottomBar(snapshot.data, pageController, screens);
+          },
+        ),
+        
       ),
     );
-
-    return builder.build();
+    
   }
 }
