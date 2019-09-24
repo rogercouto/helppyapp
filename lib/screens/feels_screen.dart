@@ -12,7 +12,7 @@ class FeelsScreen extends StatelessWidget {
 
   List<Widget> createChildren(BuildContext context){
     List<Widget> list = [];
-    //list.add(Text(title, textAlign: TextAlign.justify, style: TextStyle( fontSize: 18)));
+    
     Feel feel = Feel(0,"Informação", info.title, info.text);
     list.add(
       ConstrainedBox(constraints: BoxConstraints(minWidth: double.infinity, minHeight: 50),

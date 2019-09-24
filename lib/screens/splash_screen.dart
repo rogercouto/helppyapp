@@ -47,22 +47,29 @@ class Splash extends StatelessWidget {
     });
     });    
     
-    return Container(
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
         children: <Widget>[
           Container(
-            width: 300,
-            height: 300,
-            child: FlareActor("assets/anim/girafa.flr", 
-                  animation: "pescoço_loop", 
-                  isPaused: false),
-          ),
-          Image.asset("assets/image/logo.png", width: 300,)
-        ],
-      ),
+            color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 300,
+                  height: 300,
+                  child: FlareActor("assets/anim/girafa.flr", 
+                        animation: "pescoço_loop", 
+                        isPaused: false),
+                ),
+                Image.asset("assets/image/logo.png", width: 300,)
+              ],
+            ),
+          )
+        ]
+      )
     );
   }
 }
