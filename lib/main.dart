@@ -5,6 +5,7 @@ import 'package:helppyapp/blocs/app_bloc.dart';
 import 'package:helppyapp/blocs/posts_bloc.dart';
 import 'package:helppyapp/models/feel.dart';
 import 'package:helppyapp/models/info.dart';
+import 'package:helppyapp/screens/about_screen.dart';
 import 'package:helppyapp/screens/breath_screen.dart';
 import 'package:helppyapp/screens/help_screen.dart';
 import 'package:helppyapp/screens/home_screen.dart';
@@ -46,17 +47,18 @@ class Loader extends StatelessWidget {
 
     Map<int, Info> _infos;
     Map<int, Feel> _feels;
+
     ContentHelper.getInfoMap().then((infoMap){
       _infos = infoMap;
       ContentHelper.getFeelsMap().then((feelsMap){
         _feels = feelsMap;
-      });
-      Future.delayed(Duration(seconds: 2)).then((_){
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) {
-            return MainApp(_infos, _feels);
-          })
-        );
+        Future.delayed(Duration(seconds: 2)).then((_){
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) {
+              return MainApp(_infos, _feels);
+            })
+          );
+        });
       });
     });
     return SplashScreen();
@@ -83,18 +85,31 @@ class _MainAppState extends State<MainApp> {
 
   var _stack = data.Stack<int>();
 
+  Widget _aboutButton(BuildContext context){
+    return IconButton(icon: Icon(Icons.help), onPressed: (){
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (BuildContext context) {
+          return AboutScreen();
+        })
+      );
+    });
+  }
+
   List<Screen> getScreens(){
     var postsBloc = BlocProvider.getBloc<PostsBloc>();
     return[
-      Screen(0,"Home", Icons.home, HomeScreen(pageController)),
-      Screen(1, "Objetivo", Icons.check, GoalScreen(widget.infos[1].text)),
+      Screen(0,"Home", Icons.home, HomeScreen(pageController),
+        action: _aboutButton(context)
+      ),
+      Screen(1, "Objetivo", Icons.check, GoalScreen(widget.infos[1].text),),
       Screen(2, "Ajuda", Icons.phone, HelpScreen()),
-      Screen(3, widget.infos[2].title, Icons.help, FeelsScreen(widget.infos[2], widget.feels)),
+      Screen(3, widget.infos[2].title, Icons.library_books, FeelsScreen(widget.infos[2], widget.feels)),
       Screen(4, "Exercício", Icons.directions_run, BreathScreen(widget.infos[3])),
-      Screen(5, "Motivação", Icons.library_books, MotivationScreen(),
-      action: IconButton(icon: Icon(Icons.refresh), onPressed: (){
-        postsBloc.getPosts();
-      },))
+      Screen(5, "Motivação", Icons.sentiment_very_satisfied, MotivationScreen(),
+        action: IconButton(icon: Icon(Icons.refresh), onPressed: (){
+          postsBloc.getPosts();
+        },)
+      )
     ];
   }
 
@@ -151,7 +166,7 @@ class _MainAppState extends State<MainApp> {
           actions: <Widget>[
             StreamBuilder(
               stream: bloc.outAction,
-              initialData: Container(),
+              initialData: _aboutButton(context),
               builder: (context, snapshot){
                 return snapshot.data != null ? snapshot.data : Container();
               },
