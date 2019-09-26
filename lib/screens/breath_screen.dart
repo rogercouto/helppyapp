@@ -1,4 +1,5 @@
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helppyapp/helpers/screen_helper.dart';
 import 'package:helppyapp/models/info.dart';
@@ -50,34 +51,46 @@ class _BreathScreenState extends State<BreathScreen> {
               child: Column(
                 children: <Widget>[
                   Align(
-                    
+
                     alignment: Alignment.topCenter,
                     child: Column(
                       children: <Widget>[
-                        
+                        SizedBox(height: 15,),
                         SizedBox(width: _screenHelper.getTextBoxSize(),
                           child: Text(widget.info.text, style: TextStyle(fontSize: fs), textAlign: TextAlign.justify,),
                         ),
+                        /*
                         Container(
                           margin: EdgeInsets.only(top: 30.0),
                           child: Text(_isPaused? "" : "Inspire ... expire", style: TextStyle(fontSize: fs+6))
+                        )
+                         */
+                      ],
+                    ),
+                  ),
+                  Align(
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          height: animSize.height,
+                          width: animSize.width,
+                          child: FlareActor("assets/anim/resp.flr",
+                              animation: "loop",
+                              isPaused: _isPaused
+                          ),
+                        ),
+                        Container(
+                          height: animSize.height,
+                          width: animSize.width,
+                          alignment: Alignment.center,
+                          child: Text(_isPaused? "Iniciar" : "", style: TextStyle(fontSize: fs+6), textAlign: TextAlign.center,),
                         )
                       ],
                     ),
                   ),
                   Align(
-                    child: Container(
-                      height: animSize.height,
-                      width: animSize.width,
-                      child: FlareActor("assets/anim/resp.flr", 
-                            animation: "loop", 
-                            isPaused: _isPaused
-                      ),
-                    ),
-                  ),
-                  Align(
                     alignment: Alignment.center,
-                    child: Text(_isPaused ? "Iniciar" : "", style: TextStyle(fontSize: fs+6),),
+                    child: Text(_isPaused ? "" : "Inspire ... expire", style: TextStyle(fontSize: fs+6),),
                   )
                 ],
               )

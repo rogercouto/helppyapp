@@ -46,7 +46,7 @@ class MotivationScreen extends StatelessWidget {
                   return Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(10),
-                    child:Text("Fim das postagens")    
+                    child:Text(bloc.emptyBlog() ? "Nenhuma postagem ainda" : "Fim das postagens")
                   );
                 }
               }

@@ -45,6 +45,10 @@ class PostsBloc implements BlocBase{
     _loading = false;
   }
 
+  bool emptyBlog(){
+    return _docs.length == 0;
+  }
+
   /*
    * Get mext page of posts 
    */

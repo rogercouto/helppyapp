@@ -42,6 +42,7 @@ class HelpScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              SizedBox(height: 15,),
               SizedBox(width: _screenHelper.getTextBoxSize(),
                 child: Text("O CVV – Centro de Valorização da Vida realiza apoio emocional e prevenção do suicídio, atendendo voluntária e gratuitamente todas as pessoas que querem e precisam conversar, sob total sigilo por telefone, email e chat 24 horas todos os dias.\n ",
                   textAlign: TextAlign.justify,
@@ -60,9 +61,9 @@ class HelpScreen extends StatelessWidget {
                 ),
               ),
               button("188", Icons.phone, Colors.red, "tel://188"),
-              SizedBox(height: 20,),
+              SizedBox(height: 10,),
               button("Chat", Icons.chat, Colors.orange, "http://cvvweb.mysuite1.com.br/client/chatan.php?h=&inf=&lfa="),
-              SizedBox(height: 20,),
+              SizedBox(height: 10,),
               button("E-mail", Icons.email, Colors.green, "https://www.cvv.org.br/e-mail/")
             ],
           )

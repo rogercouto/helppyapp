@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends StatelessWidget {
+
+  final String description;
+
+  AboutScreen(this.description);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +28,7 @@ class AboutScreen extends StatelessWidget {
             Container(
               width: double.infinity,
               alignment: Alignment.centerLeft,
-              child: Text("Descrição do projeto...",
+              child: Text(description,
                 textAlign: TextAlign.justify,
               ),
             ),
@@ -36,7 +41,7 @@ class AboutScreen extends StatelessWidget {
             Container(
               width: double.infinity,
               alignment: Alignment.centerLeft,
-              child: Text("Desenvolvido por Pipeline Lab",
+              child: Text("Desenvolvido por Adriano Almeida e Roger Couto",
                 textAlign: TextAlign.left,
               ),
             ),

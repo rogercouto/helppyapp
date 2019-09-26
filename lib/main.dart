@@ -15,10 +15,13 @@ import 'package:helppyapp/screens/motivation_screen.dart';
 import 'package:helppyapp/screens/splash_screen.dart';
 import 'package:helppyapp/widgets/bottom_bar.dart';
 import 'package:helppyapp/widgets/screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:stack/stack.dart' as data;
 import 'helpers/content_helper.dart';
 
-void main() {
+void main() async{
+
+  await PermissionHandler().requestPermissions([PermissionGroup.storage]);
 
   return runApp(
     BlocProvider(
@@ -89,7 +92,7 @@ class _MainAppState extends State<MainApp> {
     return IconButton(icon: Icon(Icons.help), onPressed: (){
       Navigator.of(context).push(
         MaterialPageRoute(builder: (BuildContext context) {
-          return AboutScreen();
+          return AboutScreen(widget.infos[4].text);
         })
       );
     });

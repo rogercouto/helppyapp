@@ -107,15 +107,15 @@ class ScreenHelper{
     if (_size == ScreenSize.SMALL)
       return Size(175, 50);
     else if (_size == ScreenSize.MEDIUM)
-      return Size(200, 75);
+      return Size(200, 60);
     return Size(200, 100);
   }
 
   double getHelpBtnFontSize(int txtLength){
     if (_size == ScreenSize.SMALL)
-      return txtLength < 4 ? 42 : 38;
+      return txtLength < 4 ? 40 : 36;
     else if (_size == ScreenSize.MEDIUM)
-      return txtLength < 4 ? 60 : 42;
+      return txtLength < 4 ? 42 : 38;
     return txtLength < 4 ? 64 : 48;
   }
 
@@ -123,7 +123,7 @@ class ScreenHelper{
     if (_size == ScreenSize.SMALL)
       return 36;
     else if (_size == ScreenSize.MEDIUM)
-      return 42;
+      return 36;
     return 48;
   }
 
