@@ -18,6 +18,7 @@ import 'package:helppyapp/widgets/screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stack/stack.dart' as data;
 import 'helpers/content_helper.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async{
 
@@ -36,7 +37,8 @@ void main() async{
           theme: ThemeData(
             primarySwatch: Colors.brown,
             primaryColor: Color.fromARGB(255, 56, 33, 13),
-            secondaryHeaderColor: Color.fromARGB(255, 255, 214, 0)
+            secondaryHeaderColor: Color.fromARGB(255, 255, 214, 0),
+            backgroundColor: Color.fromRGBO(245, 245, 245, 1.0)
           ),
         )
     )
@@ -87,6 +89,33 @@ class _MainAppState extends State<MainApp> {
   final bloc = BlocProvider.getBloc<AppBloc>();
 
   var _stack = data.Stack<int>();
+
+  final FirebaseMessaging _messaging = FirebaseMessaging();
+
+  void handleMsg(Map<String, dynamic> msg){
+    if (msg.containsKey("data")){
+      final dynamic data = msg["data"];
+      if (data["click_action"] == "FLUTTER_NOTIFICATION_CLICK"){
+        _stack.pop();
+        _stack.push(5);
+        pageController.jumpToPage(5);      
+      }
+    }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    _messaging.configure(
+      onMessage: (Map<String, dynamic> msg) async {
+        handleMsg(msg);
+      },
+      onLaunch: (Map<String, dynamic> msg) async {},
+      onResume: (Map<String, dynamic> msg) async {
+        handleMsg(msg);
+      },
+    );
+  }
 
   Widget _aboutButton(BuildContext context){
     return IconButton(icon: Icon(Icons.help), onPressed: (){
@@ -155,6 +184,7 @@ class _MainAppState extends State<MainApp> {
         }
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           backgroundColor: themeData.secondaryHeaderColor,
           centerTitle: true,
@@ -201,6 +231,5 @@ class _MainAppState extends State<MainApp> {
         
       ),
     );
-    
   }
 }

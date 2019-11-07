@@ -115,11 +115,15 @@ class PostCard extends StatelessWidget {
           padding: EdgeInsets.all(15),
           child: Column(
             children: <Widget>[
+              (post.title != null && post.title.isNotEmpty) ?
               SizedBox(
                 width: double.infinity,
                 child: Text(post.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
-              SizedBox(height: 10,),
+              )
+              :Container()
+              ,
+              (post.title != null && post.title.isNotEmpty) ?
+              SizedBox(height: 10,):Container(),
               SizedBox(
                 width: double.infinity,
                 height: post.media != null ? null : post.text.length > 100 ? 300 : 200,

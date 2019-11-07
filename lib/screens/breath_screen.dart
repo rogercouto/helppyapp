@@ -74,7 +74,7 @@ class _BreathScreenState extends State<BreathScreen> {
                         Container(
                           height: animSize.height,
                           width: animSize.width,
-                          child: FlareActor("assets/anim/resp.flr",
+                          child: FlareActor("assets/anim/resp_slow.flr",
                               animation: "loop",
                               isPaused: _isPaused
                           ),

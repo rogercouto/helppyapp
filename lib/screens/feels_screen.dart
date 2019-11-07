@@ -12,7 +12,6 @@ class FeelsScreen extends StatelessWidget {
 
   List<Widget> createChildren(BuildContext context){
     List<Widget> list = [];
-    
     Feel feel = Feel(0,"Informação", info.title, info.text);
     list.add(
       ConstrainedBox(constraints: BoxConstraints(minWidth: double.infinity, minHeight: 50),
@@ -60,6 +59,7 @@ class FeelsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
         padding: EdgeInsets.all(50),
         child: Column(
