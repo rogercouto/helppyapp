@@ -106,11 +106,18 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState(){
     super.initState();
+    /*
+    _messaging.getToken().then((token){
+      print(token);
+    });
+    */
     _messaging.configure(
       onMessage: (Map<String, dynamic> msg) async {
         handleMsg(msg);
       },
-      onLaunch: (Map<String, dynamic> msg) async {},
+      onLaunch: (Map<String, dynamic> msg) async {
+        handleMsg(msg);
+      },
       onResume: (Map<String, dynamic> msg) async {
         handleMsg(msg);
       },

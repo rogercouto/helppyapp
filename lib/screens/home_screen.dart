@@ -20,6 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool _bVisible = false;
 
+  bool _disposed = false;
+
   ScreenHelper _screenHelper;
 
   int _animIndex = 0;
@@ -28,10 +30,18 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState(){
     super.initState();
     Future.delayed(Duration(seconds: 1)).then((_){
-      setState(() {
-        _bVisible = true;
-      });
+      if (!_disposed){
+        setState(() {
+          _bVisible = true;
+        });
+      }
     });
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    _disposed = true;
   }
 
   Widget girafa(){
